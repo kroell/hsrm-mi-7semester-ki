@@ -11,11 +11,12 @@ import threading
 from bs4 import BeautifulSoup
 from model import *
 
-#URL = 'http://www.spiegel.de/'
+
+URL = 'http://www.spiegel.de/'
 SHOP = 'http://www.spiegel.de/shop/'
 
 class Spider(object):
-
+    
     def __init__(self, start_url):
         '''
         Constructor
@@ -27,10 +28,14 @@ class Spider(object):
     def initSpider(self, docurl):
     
         try:
-            response = urllib2.urlopen(docurl, timeout=5)
-        except Exception, error:
+            response = urllib2.urlopen(docurl,timeout=4)
+        except urllib2.HTTPError, error:
             #raise Exception("HTTP error: %r" % error, error.code)
-            print "HTTP error: %r" % error, error.code
+            print "HTTP error: %r" % error.code
+        except socket.timeout, error:
+            print "Socket Timout: %r" % error
+        finally:
+            response = urllib2.urlopen(URL)
     
         html = response.read()
         response.close() 
@@ -43,10 +48,15 @@ class Spider(object):
         
         for link in soup.find_all('a'):
             url = link.get('href')
-            if url.startswith('/') or url.startswith(self.start_url) or not url.startswith(SHOP):
+            #print url
+           # print self.start_url
+            if url.startswith('/') or url.startswith(self.start_url):
                 if url.startswith('/'):
                     url = self.start_url + url[1:]
                 if url not in [page.url for page in self.pages]:
                     print url
                     #time.sleep(5) 
                     self.initSpider(url)
+        
+    
+    
