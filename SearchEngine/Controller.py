@@ -6,6 +6,7 @@ Created on 06.12.2013
 
 from model import Spider
 
+
 URL = 'http://www.spiegel.de/'
 
 
@@ -17,5 +18,6 @@ if __name__ == '__main__':
     print "start crawling...\n"
     spider.initSpider(URL)
     print "\n...finished crawling"
+    spider.preparePage()
     
-    print len(spider.pages)
+    print len(spider.pages) #330

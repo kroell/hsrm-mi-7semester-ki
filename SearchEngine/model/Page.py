@@ -9,13 +9,14 @@ class Page(object):
     classdocs
     '''
 
-    def __init__(self, html=None, url=None, title=None, created=None, modified=None):
+    def __init__(self, html=None, url=None, title=None, description=None, created=None, modified=None, raw=None, tokens=None):
         '''
         Constructor
         '''
         self.html = html
         self.url = url
         self.title = title
+        self.description = description
         self.created = created
         self.modified = modified 
     
