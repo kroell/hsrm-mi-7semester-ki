@@ -17,6 +17,6 @@ class Page(object):
         self.url = url
         self.title = title
         self.created = created
-        self.modified = modified
+        self.modified = modified 
     
 

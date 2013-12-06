@@ -1,5 +1,5 @@
 '''
-Created on 06.12.2013
+Created on 07.12.2013
 
 @author: soerenkroell
 '''
@@ -16,7 +16,7 @@ pages = []
 
 def initPage(docurl):
     try:
-        #request = urllib2.Request(docurl)
+        request = urllib2.Request(docurl)
         response = urllib2.urlopen(docurl)
     except urllib2.URLError, e:
         raise Exception("URL error: %r" % e)
