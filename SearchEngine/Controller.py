@@ -4,8 +4,8 @@ Created on 06.12.2013
 @author: soerenkroell
 '''
 
-from model import Spider
-
+from model import Spider, Indexer, Searcher
+import sys
 
 URL = 'http://www.spiegel.de/'
 
@@ -13,11 +13,25 @@ URL = 'http://www.spiegel.de/'
 
 if __name__ == '__main__':
 
-    URL = 'http://www.spiegel.de/'
     spider = Spider(URL)
     print "start crawling...\n"
     spider.initSpider(URL)
-    print "\n...finished crawling"
+    print "\n...finished crawling\n"
     spider.preparePage()
+    #print len(spider.pages) #330
+    indexer = Indexer()
+    print "indexing pages"
     
-    print len(spider.pages) #330
+    [indexer.addPage(p) for p in spider.pages.values()]
+    indexer.close()
+
+    searcher = Searcher(indexer)
+    eingabe = "";
+    while (True):
+        print "Geben sie Ihren Suchgebriff ein"
+        eingabe = sys.stdin.readline()
+        if eingabe == "exit": break;
+        searcher.search(eingabe);
+    
+    
+   

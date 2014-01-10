@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 06.12.2013
 
@@ -13,6 +14,7 @@ from model import *
 
 
 URL = 'http://www.spiegel.de/'
+SEARCHDEPTH = 1;
 
 class Spider(object):
     
@@ -21,7 +23,7 @@ class Spider(object):
         Constructor
         '''
         self.start_url = start_url
-        self.pages = []
+        self.pages = {} # günstigere Suche wegen Hashing
     
     
     def initSpider(self, docurl):
@@ -51,17 +53,21 @@ class Spider(object):
                 description = description['content']
         created = modified = time.time()
         page = Page(html, docurl, title, description, created, modified)
-        self.pages.append(page)
-        
+        self.pages[docurl]= page
+
         for link in soup.find_all('a'):
-            url = link.get('href')
+            if len(self.pages) >= 7 :
+                return
+            url = str(link.get('href'))
             try:
                 if url.startswith('/') or url.startswith(self.start_url):
                     if url.startswith('/'):
                         url = self.start_url + url[1:]
-                    if url not in [page.url for page in self.pages]:
+                        #print "URL-", url
+                    url = url.rstrip('/') # '/' am ende entfernen
+                    if not self.pages.has_key(url):
                         print url
-                        #time.sleep(5) 
+                        time.sleep(0.2) 
                         self.initSpider(url)
             except Exception, error:
                 print "Error: %r" % error
@@ -69,9 +75,10 @@ class Spider(object):
     
     def preparePage(self):
         print len(self.pages)
-        for page in self.pages:
+        for page in self.pages.values():
             page.raw = nltk.clean_html(page.html)
-            page.tokens = nltk.word_tokenize(page.raw)
+            '''Wird Lucene schon machen'''
+            #page.tokens = nltk.word_tokenize(page.raw)
   
         
     
